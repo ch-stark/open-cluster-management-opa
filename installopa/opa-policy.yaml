@@ -1,7 +1,7 @@
 apiVersion: policy.mcm.ibm.com/v1alpha1
 kind: Policy
 metadata:
-  name: opapolicy
+  name: policy-opa
   namespace: policies
   annotations:
     policy.mcm.ibm.com/categories: >-
