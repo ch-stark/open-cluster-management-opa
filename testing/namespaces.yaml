@@ -4,7 +4,9 @@ metadata:
   annotations:
     ingress-whitelist: "*.qa.acmecorp.com,*.internal.acmecorp.com"
   name: qa
+  
 ---
+
 apiVersion: v1
 kind: Namespace
 metadata:
