@@ -148,3 +148,35 @@ data:
         reason != ""
     }
     else = {"allowed": true, "uid": uid}
+---
+kind: SecurityContextConstraints
+apiVersion: security.openshift.io/v1
+metadata:
+  name: opa-scc
+  namespace: opa
+allowHostDirVolumePlugin: true
+allowHostIPC: true
+allowHostNetwork: true
+allowHostPID: true
+allowHostPorts: true
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: true
+allowedCapabilities:
+- '*'
+allowedUnsafeSysctls:
+- '*'
+defaultAddCapabilities: []
+requiredDropCapabilities: []
+readOnlyRootFilesystem: false
+# allowedProcMountTypes: runtime/default
+priority: 1
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+seccompProfiles:
+- '*'
+users:
+- system:serviceaccount:opa:default
+volumes:
+- '*'
