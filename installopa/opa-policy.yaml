@@ -1,38 +1,51 @@
 apiVersion: policy.mcm.ibm.com/v1alpha1
 kind: Policy
 metadata:
-  name: policy-opa
-  namespace: policies
+  name: opapolicy
+  namespace: opa
   annotations:
-    policy.mcm.ibm.com/standards: NIST
-    policy.mcm.ibm.com/categories: CIS
-    policy.mcm.ibm.com/controls: opa
+    policy.mcm.ibm.com/categories: >-
+      PR.IP Information Protection Processes and Procedures, PR.PT Protective
+      Technology
+    policy.mcm.ibm.com/controls: 'PR.IP-1 Baseline configuration, PR.PT-3 Least Functionality'
+    policy.mcm.ibm.com/standards: NIST-CSF
+    seed-generation: '1'
+  finalizers:
+    - propagator.finalizer.mcm.ibm.com
+  generation: 8
 spec:
   complianceType: musthave
+  remediationAction: enforce   
+  disabled: false
   namespaces:
     exclude:
-    - kube*
+      - kube-*
     include:
-    - opa
+      - default
   object-templates:
-  - complianceType: musthave
-    objectDefinition:
-      apiVersion: v1
-      kind: ConfigMap
-      metadata:
-        name: no-pod
-        namespace: opa
-      data:
-        no_pod.rego: |-
-          package kubernetes.admission
-          deny[msg] {
-              input.request.kind.kind == "Pod"
-              input.request.namespace == "opa"
-              image := input.request.object.spec.containers[_].image
-              not startswith(image, "hooli.com")
-              msg := sprintf("image fails to come from trusted registry: %v", [image])
-          }
-  remediationAction: enforce
+    - complianceType: musthave
+      objectDefinition:
+        apiVersion: v1
+        kind: Namespace
+        metadata:
+          name: opa
+    - complianceType: musthave
+      objectDefinition:
+        apiVersion: v1
+        data:
+          no_pod.rego: |-
+            package kubernetes.admission
+            deny[msg] {
+                input.request.kind.kind == "Pod"
+                input.request.namespace == "opa"
+                image := input.request.object.spec.containers[_].image
+                not startswith(image, "hooli.com")
+                msg := sprintf("image fails to come from trusted registry: %v", [image])
+            }
+        kind: ConfigMap
+        metadata:
+          name: no-pod
+          namespace: opa
 
 ---
 apiVersion: mcm.ibm.com/v1alpha1
@@ -58,4 +71,4 @@ metadata:
 spec:
   clusterLabels:
     matchLabels:
-      cloud: "spoke1"
+      name: spoke311
