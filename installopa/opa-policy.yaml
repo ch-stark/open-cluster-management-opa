@@ -1,0 +1,61 @@
+apiVersion: policy.mcm.ibm.com/v1alpha1
+kind: Policy
+metadata:
+  name: policy-opa
+  namespace: mcm
+  annotations:
+    policy.mcm.ibm.com/standards: NIST
+    policy.mcm.ibm.com/categories: CIS
+    policy.mcm.ibm.com/controls: opa
+spec:
+  complianceType: musthave
+  namespaces:
+    exclude:
+    - kube*
+    include:
+    - opa
+  object-templates:
+  - complianceType: musthave
+    objectDefinition:
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: no-pod
+        namespace: opa
+      data:
+        no_pod.rego: |-
+          package kubernetes.admission
+          deny[msg] {
+              input.request.kind.kind == "Pod"
+              input.request.namespace == "opa"
+              image := input.request.object.spec.containers[_].image
+              not startswith(image, "hooli.com")
+              msg := sprintf("image fails to come from trusted registry: %v", [image])
+          }
+  remediationAction: enforce
+
+---
+apiVersion: mcm.ibm.com/v1alpha1
+kind: PlacementBinding
+metadata:
+  name: binding-opa
+  namespace: mcm
+placementRef:
+  name: placement-opa
+  kind: PlacementPolicy
+  apiGroup: mcm.ibm.com
+subjects:
+- name: policy-opa
+  kind: Policy
+  apiGroup: policy.mcm.ibm.com
+
+---
+apiVersion: mcm.ibm.com/v1alpha1
+kind: PlacementPolicy
+metadata:
+  name: placement-opa
+  namespace: mcm
+spec:
+  clusterLabels:
+    matchLabels:
+      cloud: "spoke1"
