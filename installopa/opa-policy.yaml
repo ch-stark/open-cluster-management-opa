@@ -2,7 +2,7 @@ apiVersion: policy.mcm.ibm.com/v1alpha1
 kind: Policy
 metadata:
   name: opapolicy
-  namespace: opa
+  namespace: policies
   annotations:
     policy.mcm.ibm.com/categories: >-
       PR.IP Information Protection Processes and Procedures, PR.PT Protective
