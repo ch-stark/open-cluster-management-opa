@@ -2,7 +2,7 @@ apiVersion: policy.mcm.ibm.com/v1alpha1
 kind: Policy
 metadata:
   name: policy-opa
-  namespace: mcm
+  namespace: policies
   annotations:
     policy.mcm.ibm.com/standards: NIST
     policy.mcm.ibm.com/categories: CIS
@@ -39,7 +39,7 @@ apiVersion: mcm.ibm.com/v1alpha1
 kind: PlacementBinding
 metadata:
   name: binding-opa
-  namespace: mcm
+  namespace: policies
 placementRef:
   name: placement-opa
   kind: PlacementPolicy
@@ -54,7 +54,7 @@ apiVersion: mcm.ibm.com/v1alpha1
 kind: PlacementPolicy
 metadata:
   name: placement-opa
-  namespace: mcm
+  namespace: policies
 spec:
   clusterLabels:
     matchLabels:
