@@ -4,18 +4,12 @@ metadata:
   name: policy-opa
   namespace: policies
   annotations:
-    policy.mcm.ibm.com/categories: >-
-      PR.IP Information Protection Processes and Procedures, PR.PT Protective
-      Technology
-    policy.mcm.ibm.com/controls: 'PR.IP-1 Baseline configuration, PR.PT-3 Least Functionality'
-    policy.mcm.ibm.com/standards: NIST-CSF
-    seed-generation: '1'
-  finalizers:
-    - propagator.finalizer.mcm.ibm.com
-  generation: 8
+    policy.open-cluster-management.io/standards: FISMA
+    policy.open-cluster-management.io/categories: PR.DS Data Security
+    policy.open-cluster-management.io/controls: DE.CM-8 Vulnerability scans
 spec:
   complianceType: musthave
-  remediationAction: enforce   
+  remediationAction: enforce
   disabled: false
   namespaces:
     exclude:
@@ -46,33 +40,30 @@ spec:
         metadata:
           name: no-pod
           namespace: opa
-
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
-  name: binding-opa
+  name: binding-policy-opa
   namespace: policies
 placementRef:
-  name: placement-opa
+  name: placement-policy-opa
   kind: PlacementRule
   apiGroup: apps.open-cluster-management.io
 subjects:
 - name: policy-opa
   kind: Policy
-  apiGroup: apps.open-cluster-management.io
-
+  apiGroup: policy.open-cluster-management.io
 ---
-
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: policy-opa
-  namespace: 
+  name: placement-policy-opa
+  namespace: policies
 spec:
   clusterConditions:
   - status: "True"
     type: ManagedClusterConditionAvailable
   clusterSelector:
     matchExpressions:
-      []  # selects all clusters if not specified
+      - {key: environment, operator: In, values: ["dev"]}
