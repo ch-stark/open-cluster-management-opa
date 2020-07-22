@@ -1,4 +1,4 @@
-apiVersion: policy.mcm.ibm.com/v1alpha1
+apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
   name: policy-opa
@@ -48,29 +48,31 @@ spec:
           namespace: opa
 
 ---
-apiVersion: mcm.ibm.com/v1alpha1
+apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
   name: binding-opa
   namespace: policies
 placementRef:
   name: placement-opa
-  kind: PlacementPolicy
-  apiGroup: mcm.ibm.com
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
 subjects:
 - name: policy-opa
   kind: Policy
-  apiGroup: policy.mcm.ibm.com
+  apiGroup: apps.open-cluster-management.io
 
 ---
+
 apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
-  name: placement-opa
-  namespace: policies
+  name: policy-opa
+  namespace: 
 spec:
   clusterConditions:
-  - type: OK
+  - status: "True"
+    type: ManagedClusterConditionAvailable
   clusterSelector:
     matchExpressions:
-      []
+      []  # selects all clusters if not specified
