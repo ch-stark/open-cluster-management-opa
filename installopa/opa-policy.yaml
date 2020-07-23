@@ -2,7 +2,7 @@ apiVersion: policy.open-cluster-management.io/v1
 kind: Policy
 metadata:
   name: policy-opa
-  namespace: default
+  namespace: policies
   annotations:
     policy.open-cluster-management.io/standards: NIST-CSF
     policy.open-cluster-management.io/categories: PR.IP Information Protection Processes and Procedures, PR.PT Protective Technology
@@ -35,7 +35,7 @@ spec:
         metadata:
           name: policy-opa-namespace
         spec:
-          remediationAction: inform # will be overridden by remediationAction in parent policy
+          remediationAction: enforce # will be overridden by remediationAction in parent policy
           severity: low
           namespaceSelector:
             exclude: ["kube-*"]
@@ -77,7 +77,7 @@ spec:
                   name: nopod
                   namespace: opa
 
-   
+  
 ---
 apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
