@@ -1,4 +1,26 @@
 will be based on:  https://www.openpolicyagent.org/docs/latest/kubernetes-tutorial/
 
+don't forget to add scc also you will get:
 
-Troubleshooting:
+oc logs opa-5b6c7b96fd-75kpr -c opa   -n opa
+{
+  "addrs": [
+    "0.0.0.0:443",
+    "http://127.0.0.1:8181"
+  ],
+  "diagnostic-addrs": [],
+  "level": "info",
+  "msg": "Initializing server.",
+  "time": "2021-01-22T17:49:26Z"
+}
+{
+  "level": "info",
+  "msg": "Starting decision logger.",
+  "plugin": "decision_logs",
+  "time": "2021-01-22T17:49:26Z"
+}
+{
+  "err": "listen tcp 0.0.0.0:443: bind: permission denied",
+  "level": "fatal",
+  "msg": "Listener failed.",
+  "time": "2021-01-22T17:49:26Z"
